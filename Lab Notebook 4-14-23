@@ -7,3 +7,54 @@
 
 # https://github.com/jthmiller/gen711-811-example EXAMPLE REPO for Final Project 
 
+4/21 NOTES:
+
+# folder for trimmed fastqs = trimmed_fastqs_FP
+# cp /tmp/gen711_project_data/fastp.sh /home/users/kgb1008/711-final-project/fastp.sh
+
+# chmod +x /home/users/kgb1008/711-final-project/fastp.sh 
+- changes permission
+
+# /home/users/kgb1008/711-final-project/fastp.sh fastp.sh 150 /tmp/gen711_project_data/FMT_3/fmt-tutorial-demux-2 trimmed_fastqs_FP
+    /tmp/gen711_project_data/FMT_3/fmt-tutorial-demux-2
+    /tmp/gen711_project_data/FMT_3/fmt-tutorial-demux-1
+
+# conda activate qiime2-2022.8 
+    activate qiime environment 
+
+# qiime tools import \
+   --type "SampleData[PairedEndSequencesWithQuality]"  \
+   --input-format CasavaOneEightSingleLanePerSampleDirFmt \
+   --input-path <path to your output directory of trimmed fastqs> \
+   --output-path <path to an output directory>/<a name for the output files> \
+
+Next, import the directory of poly-G trimmed FASTQ files into a single 'qiime file' with the 'qza' extension with the 'qiime tools import' command below.
+# qiime tools import --type "SampleData[PairedEndSequencesWithQuality]" --input-format CasavaOneEightSingleLanePerSampleDirFmt --input-path /home/users/kgb1008/711-final-project/trimmed_fastqs_FP --output-path /home/users/kgb1008/711-final-project/trimmed_fastqs_FP/qiime_fastqs 
+
+    Path to trimmed fastqs = /home/users/kgb1008/711-final-project/trimmed_fastqa_FP
+   
+Using the primer sequence, qiime's 'cutadapt' plugin removes the primer and adapters of each pair of sequences. You need to select the correct primers to provide qiime and cutadapt. A second 'qza' output file is created for the cutadapt trimmed data. Name it something that makes sense and add the 'qza' extension, so the output path should look something like: /path/to/output/directory/cutadapt-sequences.qza. Run the 'demux summarize' to make a summary.qzv file for
+## qiime cutadapt trim-paired \
+    --i-demultiplexed-sequences <path to the file from step 2> \
+    --p-cores 4 \
+    --p-front-f <the forward primer sequence> \
+    --p-front-r <the reverse primer sequence> \ NO REVERSE SO REMOVE LINE
+    --p-discard-untrimmed \
+    --p-match-adapter-wildcards \
+    --verbose \
+    --o-trimmed-sequences <path to an output directory>/<name for the output files>.qza
+
+# qiime cutadapt trim-paired --i-demultiplexed-sequences qiime_fastqs --p-cores 4 --p -front-f TACGTATGGTGCA --p-discard-untrimmed --p-match-adapter-wildcats --verbose --o-trimmed-sequences /home/users/kgb1008/711-final-project/trimmed_fastqs_FP/qiime_fastqs.qza
+
+## qiime demux summarize \
+--i-data <path to the file from step above> \
+--o-visualization  <path to an output directory>/<a name for the output files>.qzv
+
+# qiime demux summarize --i-data qiime_fastqs.qza --o-visualization /home/users/kgb1008/711-final-project/trimmed_fastqs_FP/qiime_fastqs.qzv
+
+
+
+
+# git add testfile.txt will upload to github on the web 
+# git commit 
+# git push will add file online 
